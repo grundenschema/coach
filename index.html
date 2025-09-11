@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <title>Välj en coach</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1 { color: #333; }
+    button {
+      display: block; margin: 10px 0; padding: 10px 15px;
+      font-size: 16px; cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Välj en coach</h1>
+  <div id="coach-list">Laddar coacher...</div>
+
+  <script>
+    const sheetJSONUrl = "DIN_JSON_URL_HÄR"; // T.ex. Google Sheets JSON
+
+    async function loadCoaches() {
+      const res = await fetch(sheetJSONUrl);
+      const text = await res.text();
+      // Parsar Google Visualization JSON
+      const json = JSON.parse(text.match(/google\.visualization\.Query\.setResponse\((.*)\);/)[1]);
+      const rows = json.table.rows.map(r => r.c.map(cell => cell ? cell.v : ""));
+      
+      // Kolumn 6 = Coach
+      const coachSet = new Set();
+      rows.slice(1).forEach(r => {
+        if(r[6]) r[6].split(',').forEach(c => coachSet.add(c.trim()));
+      });
+
+      const div = document.getElementById("coach-list");
+      div.innerHTML = "";
+      coachSet.forEach(coach => {
+        const btn = document.createElement("button");
+        btn.textContent = coach;
+        btn.onclick = () => window.location.href = `coach.html?coach=${encodeURIComponent(coach)}`;
+        div.appendChild(btn);
+      });
+    }
+
+    loadCoaches();
+  </script>
+</body>
+</html>

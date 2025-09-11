@@ -1,0 +1,7 @@
+body { font-family: Arial, sans-serif; padding: 20px; }
+h1, h2 { color: #333; }
+button {
+  display: block; margin: 10px 0; padding: 10px 15px;
+  font-size: 16px; cursor: pointer;
+}
+.event { padding: 10px; margin: 5px 0; border-radius: 5px; }
